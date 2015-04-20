@@ -1,13 +1,13 @@
-// This example demonstrates decoding a JPEG image and examining its pixelis.
-package main
+package jpeg_decoder
 
 import (
-	"encoding/base64"
 	"fmt"
 	"image"
+	"image/color"
 	_ "image/jpeg"
+	"io"
 	"log"
-	"strings"
+	"os"
 	// Package image/jpeg is not used explicitly in the code below,
 	// but is imported for its initialization side-effect, which allows
 	// image.Decode to understand JPEG formatted images. Uncomment these
@@ -15,6 +15,47 @@ import (
 	// _ "image/gif"
 	// _ "image/png"
 )
+
+type RGBASum struct {
+	r, g, b, a uint64
+}
+
+func AvgColorFromFile(filename string) (avg color.Color, err error) {
+	reader, err := os.Open(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer reader.Close()
+	return AvgColor(reader)
+}
+
+func AvgColor(reader io.Reader) (avg color.Color, err error) {
+	m, _, err := image.Decode(reader)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	var total uint64
+	total = 0
+	sum := RGBASum{}
+
+	bounds := m.Bounds()
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			total++
+			r, g, b, a := m.At(x, y).RGBA()
+			sum.r = (sum.r + uint64(r))
+			sum.g = (sum.g + uint64(g))
+			sum.b = (sum.b + uint64(b))
+			sum.a = (sum.a + uint64(a))
+		}
+	}
+	r := sum.r / total
+	g := sum.g / total
+	b := sum.b / total
+	a := sum.a / total
+	return color.RGBA{uint8(r), uint8(g), uint8(b), uint8(a)}, nil
+}
 
 func main() {
 	// Decode the JPEG data. If reading from file, create a reader with
@@ -24,7 +65,12 @@ func main() {
 	//     log.Fatal(err)
 	// }
 	// defer reader.Close()
-	reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(data))
+	//reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(data))
+	reader, err := os.Open("barracks.jpg")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer reader.Close()
 	m, _, err := image.Decode(reader)
 	if err != nil {
 		log.Fatal(err)
