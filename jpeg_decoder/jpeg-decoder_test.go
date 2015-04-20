@@ -20,3 +20,11 @@ func TestDecode(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkDecode(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		AvgColorFromFile("../testimages/black-50x50.jpg")
+		AvgColorFromFile("../testimages/white-50x50.jpg")
+		AvgColorFromFile("../testimages/barracks.jpg")
+	}
+}
