@@ -1,4 +1,4 @@
-package jpeg_decoder
+package decode
 
 import (
 	"image/color"

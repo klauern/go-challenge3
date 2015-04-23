@@ -1,4 +1,4 @@
-package jpeg_decoder
+package decode
 
 import (
 	"fmt"
@@ -55,6 +55,11 @@ func AvgColor(reader io.Reader) (avg color.Color, err error) {
 	b := sum.b / total
 	a := sum.a / total
 	return color.RGBA{uint8(r), uint8(g), uint8(b), uint8(a)}, nil
+}
+
+func nearEnough(avg color.Color, max_diff int) bool {
+	avg.RGBA()
+	return false
 }
 
 func main() {

@@ -1,4 +1,4 @@
-package hello
+package mosaic
 
 import (
 	"fmt"
