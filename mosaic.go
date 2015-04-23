@@ -1,14 +1,13 @@
 package mosaic
 
-import (
-	"fmt"
-	"net/http"
-)
+import "image/color"
 
-func init() {
-	http.HandleFunc("/", handler)
-}
+var colors color.Palette = BuildPalette()
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "hello world!")
+func BuildPalette() color.Palette {
+	palette := new(color.Palette)
+	// index existing images in folder
+	// add a bunch more until you reach the sweet spot
+
+	return *palette
 }
