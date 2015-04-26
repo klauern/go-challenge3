@@ -7,6 +7,10 @@ import (
 	"testing"
 )
 
+func TestGetPhoto(t *testing.T) {
+	t.Errorf("not Implemented")
+}
+
 func TestGetInterestingness(t *testing.T) {
 	photos := GetInterestingness()
 

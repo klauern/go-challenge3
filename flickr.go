@@ -1,8 +1,10 @@
 package mosaic
 
 import (
+	"bytes"
 	"encoding/json"
 	"image"
+	_ "image/jpeg"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -75,6 +77,25 @@ func GetInterestingness() *Photos {
 }
 
 func GetPhoto(photo Photo) (img *image.Image, err error) {
+	var buffer bytes.Buffer
 
+	buffer.WriteString("https://farm")
+	buffer.WriteString(string(photo.Farm))
+	buffer.WriteString(".staticflickr.com/")
+	buffer.WriteString(photo.Server)
+	buffer.WriteString("/")
+	buffer.WriteString(photo.Id)
+	buffer.WriteString("_")
+	buffer.WriteString(photo.Secret)
+	buffer.WriteString("_s.jpg")
+
+	resp, err := http.Get(buffer.String())
+	defer resp.Body.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	*img, _, err = image.Decode(resp.Body)
 	return img, err
 }
