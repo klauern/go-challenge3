@@ -2,6 +2,7 @@ package mosaic
 
 import (
 	"encoding/json"
+	"image"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -71,4 +72,9 @@ func GetInterestingness() *Photos {
 	photos.Unmarshal(resp.Body)
 
 	return photos
+}
+
+func GetPhoto(photo Photo) (img *image.Image, err error) {
+
+	return img, err
 }

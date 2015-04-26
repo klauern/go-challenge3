@@ -1,9 +1,39 @@
 package mosaic
 
 import (
+	"encoding/json"
+	"fmt"
 	"strings"
 	"testing"
 )
+
+func TestGetInterestingness(t *testing.T) {
+	photos := GetInterestingness()
+
+	out, err := json.Marshal(photos)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Println(string(out))
+
+	cases := []struct {
+		in   string
+		want string
+	}{
+		{photos.Total, "500"},
+		{photos.Stat, ""},
+	}
+
+	for _, c := range cases {
+		if c.in != c.want {
+			t.Errorf("Parsing %q, want %q", c.in, c.want)
+		}
+	}
+
+	if len(photos.PhotoList) != 100 {
+		t.Errorf("PhotoList is not len(100), it's %d", len(photos.PhotoList))
+	}
+}
 
 func TestJsonUnmarshalInts(t *testing.T) {
 	photos := Photos{}
