@@ -10,8 +10,8 @@ func TestDecode(t *testing.T) {
 		in   string
 		want color.Color
 	}{
-		{"../testimages/black-50x50.jpg", color.RGBA{0, 0, 0, 255}},
-		{"../testimages/white-50x50.jpg", color.RGBA{255, 255, 255, 255}},
+		{"testimages/black-50x50.jpg", color.RGBA{0, 0, 0, 255}},
+		{"testimages/white-50x50.jpg", color.RGBA{255, 255, 255, 255}},
 	}
 	for _, c := range cases {
 		got, _ := AvgColorFromFile(c.in)
