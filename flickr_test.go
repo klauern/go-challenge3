@@ -53,6 +53,12 @@ func TestJsonUnmarshalStrings(t *testing.T) {
 			t.Errorf("Parsing %q = %d, want %d", c.item, c.in, c.want)
 		}
 	}
+
+	photolen := len(photos.PhotoList)
+	if photolen != 100 {
+		t.Errorf("Length of Photo array is %d, wanted %d", photolen, 100)
+	}
+
 }
 
 const photos_json string = `{ "photos": { "page": 1, "pages": 5, "perpage": 100, "total": "500",
