@@ -1,13 +1,61 @@
 package mosaic
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
-func TestJsonUnmarshal(t *testing.T) {
-	photos := flickr.
+func TestJsonUnmarshalInts(t *testing.T) {
+	photos := Photos{}
+	photos.Unmarshal(strings.NewReader(photos_json))
 
+	cases := []struct {
+		item string
+		in   int
+		want int
+	}{
+		{"photos.Page", photos.Page, 1},
+		{"photos.Pages", photos.Pages, 5},
+		{"photos.PerPage", photos.PerPage, 100},
+		{"photos.PhotoList[0].Farm", photos.PhotoList[0].Farm, 8},
+		{"photos.PhotoList[0].IsPublic", photos.PhotoList[0].IsPublic, 1},
+		{"photos.PhotoList[0].IsFriendly", photos.PhotoList[0].IsFriendly, 0},
+		{"photos.PhotoList[0].IsFamily", photos.PhotoList[0].IsFamily, 0},
+	}
+
+	for _, c := range cases {
+		if c.in != c.want {
+			t.Errorf("Parsing %q = %d, want %d", c.item, c.in, c.want)
+		}
+	}
 }
 
-const photos_json = `{ "photos": { "page": 1, "pages": 5, "perpage": 100, "total": "500", 
+func TestJsonUnmarshalStrings(t *testing.T) {
+	photos := new(Photos)
+	photos.Unmarshal(strings.NewReader(photos_json))
+
+	cases := []struct {
+		item string
+		in   string
+		want string
+	}{
+		{"photos.Total", photos.Total, "500"},
+		{"photos.Stat", photos.Stat, ""},
+		{"photos.PhotoList[0].Owner", photos.PhotoList[0].Owner, "60509750@N08"},
+		{"photos.PhotoList[0].Id", photos.PhotoList[0].Id, "17256178635"},
+		{"photos.PhotoList[0].Secret", photos.PhotoList[0].Secret, "1d410796ef"},
+		{"photos.PhotoList[0].Server", photos.PhotoList[0].Server, "7724"},
+		{"photos.PhotoList[0].Title", photos.PhotoList[0].Title, "Saitama sakura, Japan [Explore nr 1 - thank you all!]"},
+	}
+
+	for _, c := range cases {
+		if c.in != c.want {
+			t.Errorf("Parsing %q = %d, want %d", c.item, c.in, c.want)
+		}
+	}
+}
+
+const photos_json string = `{ "photos": { "page": 1, "pages": 5, "perpage": 100, "total": "500",
     "photo": [
       { "id": "17256178635", "owner": "60509750@N08", "secret": "1d410796ef", "server": "7724", "farm": 8, "title": "Saitama sakura, Japan [Explore nr 1 - thank you all!]", "ispublic": 1, "isfriend": 0, "isfamily": 0 },
       { "id": "17257735765", "owner": "128044807@N04", "secret": "4112eb6000", "server": "7647", "farm": 8, "title": "Staub & Mopeds @ Hausham", "ispublic": 1, "isfriend": 0, "isfamily": 0 },
